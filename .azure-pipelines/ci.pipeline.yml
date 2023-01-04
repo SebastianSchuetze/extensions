@@ -1,0 +1,10 @@
+name: 2.$(Date:yyyyMMdd).$(Rev:r)
+
+pool: windows-latest
+
+
+trigger:
+- main
+
+steps:
+- template: steps/build.steps.yml

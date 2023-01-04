@@ -1,0 +1,4 @@
+pool: windows-latest
+
+steps:
+- template: steps/build.steps.yml

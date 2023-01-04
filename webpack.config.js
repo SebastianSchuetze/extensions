@@ -8,22 +8,23 @@ const Target = WebpackCommon.GetTargetPath();
 const Settings = {
     "production": {
         Tag: "",
-        TaskGuid: "{{guid_production}}",
+        TaskGuid: "bd15d14f-43af-429b-a1d4-13b892f5368b",
     },
     "development": {
         Tag: "Dev",
-        TaskGuid: "{{guid_development}}",
+        TaskGuid: "27eb4bfc-a9e0-4984-b451-1133e3222a94",
     }
-    // Can add more flavors here as needed. For example, a flavor for pre-production
 };
 
 module.exports = env => {
 
     const validEnvs = Object.keys(Settings);
-    if (!validEnvs.includes(env)) {
+    if (!env.development && !env.production) {
         console.error(`BUILD_ENV not set correctly. Allowed values are: ${validEnvs.join(", ")}`);
         process.exit(1);
     }
+
+    let envName = env.development ? "development" : "production";
 
     const config = {
 
@@ -56,7 +57,7 @@ module.exports = env => {
                     to: Target
                 },
                 {
-                    from: path.join(__dirname, "./manifests", `${env}.json`),
+                    from: path.join(__dirname, "./manifests", `${envName}.json`),
                     to: Target
                 },
                 {
@@ -87,7 +88,7 @@ module.exports = env => {
                         "base.json"
                     ],
                     rules: [
-                        // This replacement is required to allow azure-pipelines-task-lib to load the 
+                        // This replacement is required to allow azure-pipelines-task-lib to load the
                         // json resource file correctly
                         {
                             search: /__webpack_require__\(.*\)\(resourceFile\)/,
@@ -95,11 +96,11 @@ module.exports = env => {
                         },
                         {
                             search: /{{taskid}}/ig,
-                            replace: Settings[env].TaskGuid
+                            replace: Settings[envName].TaskGuid
                         },
                         {
                             search: /{{tag}}/ig,
-                            replace: Settings[env].Tag
+                            replace: Settings[envName].Tag
                         }
                     ]
                 }
@@ -107,5 +108,5 @@ module.exports = env => {
         ],
     };
 
-    return WebpackCommon.FillDefaultNodeSettings(config, env, "custom-task");
+    return WebpackCommon.FillDefaultNodeSettings(config, envName, "custom-task");
 };

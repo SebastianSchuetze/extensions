@@ -6,7 +6,7 @@
     "categories": [
         "Azure Pipelines"
     ],
-    "author": "{{author}}",
+    "author": "Sebastian Schütze",
     "version": {
         "Major": "{{major}}",
         "Minor": "{{minor}}",

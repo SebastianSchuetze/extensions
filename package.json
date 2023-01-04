@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "npm run tslint:fix && webpack --config=webpack.config.js --env %BUILD_ENV%",
+    "build": "npm run tslint:fix && webpack --config=webpack.config.js --env development",
     "build:package": "npm run build && npm run package",
     "clean": "rimraf ./dist",
     "clean:build": "npm run clean && npm run build",
@@ -17,32 +17,31 @@
     "dev:task": "npm run build && npm run clean:publish:task"
   },
   "devDependencies": {
-    "@types/jest": "^24.9.1",
-    "@types/node": "^10.17.6",
+    "@types/jest": "^29.2.5",
+    "@types/node": "^18.11.18",
     "@types/q": "^1.5.1",
-    "clean-webpack-plugin": "^1.0.0",
+    "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^5.1.1",
-    "jest": "^24.9.0",
+    "jest": "^29.3.1",
     "jest-xunit": "^1.0.11",
     "replace-in-file-webpack-plugin": "^1.0.6",
     "rimraf": "^3.0.0",
-    "string-replace-loader": "^2.1.1",
+    "string-replace-loader": "^3.1.0",
     "style-loader": "^1.0.0",
-    "tfx-cli": "^0.6.3",
-    "ts-jest": "^24.2.0",
-    "ts-loader": "^5.3.0",
-    "ts-node": "^8.5.2",
-    "tslint": "^5.15.0",
+    "tfx-cli": "^0.12.0",
+    "ts-jest": "^29.0.3",
+    "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
+    "tslint": "^6.1.3",
     "tslint-loader": "3.5.4",
-    "typescript": "^3.7.2",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.1.2"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "name": "azure-pipelines-custom-task",
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "azure-devops-node-api": "^7.2.0",
-    "azure-pipelines-task-lib": "^2.9.3"
+    "azure-devops-node-api": "^11.2.0",
+    "azure-pipelines-task-lib": "^4.1.0"
   }
 }

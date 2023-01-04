@@ -1,6 +1,6 @@
 steps:
 - powershell: |
-   Write-Host '##vso[task.setvariable variable=BUILD_ENV]production'
+    Write-Host '##vso[task.setvariable variable=BUILD_ENV]production'
   displayName: "Set build environment"
 
 - task: Npm@1
