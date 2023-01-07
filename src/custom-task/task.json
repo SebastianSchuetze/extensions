@@ -1,10 +1,13 @@
 {
+    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
     "id": "{{taskid}}",
     "name": "MyCustomTask{{tag}}",
-    "friendlyName": "My custom task",
-    "description": "My custom task",
-    "categories": [
-        "Azure Pipelines"
+    "friendlyName": "VSTeam PowerShell",
+    "description": "Azure DevOps pipeline extension to run VSTeam PowerShell scripts natively and cross-platform",
+    "category": "Azure Pipelines",
+    "visibility": [
+        "Build",
+        "Release"
     ],
     "author": "Sebastian Schütze",
     "version": {
@@ -12,6 +15,111 @@
         "Minor": "{{minor}}",
         "Patch": "{{patch}}"
     },
+    "preview": false,
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "instanceNameFormat": "Run VSTeam PowerShell $(samplestring)",
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": [
+                "externaltfsConntection"
+            ],
+            "type": "connectedService:externaltfs",
+            "label": "Azure DevOps Connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure DevOps connection to run the scripts on the target environment. Create a new service connection to the Azure DevOps organization where you want to connect to."
+        },
+        {
+            "name": "FileOrInline",
+            "type": "pickList",
+            "label": "Type",
+            "defaultValue": "File",
+            "required": true,
+            "helpMarkDown": "Type of the script: File Path or Inline PowerShell.",
+            "options": {
+                "File": "File Path",
+                "Inline": "Inline PowerShell"
+            }
+        },
+        {
+            "name": "PowerShellInline",
+            "type": "multiLine",
+            "label": "Inline VSTeam PowerShell",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Allows you to specify PowerShell containing VSTeam PowerShell cmdlets. <br/><br/>Check the [official documentation](documentation) for command that can be used.",
+            "visibleRule": "FileOrInline = Inline",
+            "properties": {
+                "resizable": "true",
+                "rows": "10"
+            }
+        },
+        {
+            "name": "PowerShellFilePath",
+            "type": "filePath",
+            "label": "VSTeam PowerShell Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to the PowerShell file containing the script to execute.",
+            "visibleRule": "FileOrInline = File"
+        },
+        {
+            "name": "PsArguments",
+            "type": "singleline",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters.",
+            "visibleRule": "FileOrInline = File"
+        },
+        {
+            "name": "errorActionPreference",
+            "type": "pickList",
+            "label": "ErrorActionPreference",
+            "required": false,
+            "defaultValue": "stop",
+            "options": {
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "Prepends the line `$ErrorActionPreference='VALUE'` at the top of your script."
+        },
+        {
+            "name": "RequiredVersion",
+            "type": "string",
+            "label": "Required Version",
+            "defaultValue": "latest",
+            "required": true,
+            "helpMarkDown": "Set the version that should be loaded. Use 'latest' to always load the newest version. Check github for the released versions: https://github.com/MethodsAndPractices/vsteam/releases",
+            "groupName": "advanced"
+        },
+        {
+            "name": "failOnStderr",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Working directory where the script is run.",
+            "groupName": "advanced"
+        }
+    ],
     "execution": {
         "Node": {
             "target": "main.js"

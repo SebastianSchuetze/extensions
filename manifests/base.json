@@ -1,17 +1,16 @@
 {
     "manifestVersion": 1,
-    "id": "vsteam-azure-devops-{{tag}}",
+    "id": "vsteam-azuredevops-extension-{{tag}}",
     "name": "VSTeam {{tag}}",
     "icons": {
-        "default": "icon.png"
+        "default": "icon.png",
+        "large": "icon.png"
     },
     "version": "{{version}}",
-    "description": "This extension contains a custom build and release task.",
+    "description": "Extension to help you integrate VSTeam with Azure DevOps",
     "publisher": "RazorSPoint",
     "public": false,
-    "categories": [
-        "Azure Pipelines"
-    ],
+    "categories": [ "Azure Pipelines" ],
     "content": {
         "details": {
             "path": "README.md"
@@ -22,6 +21,31 @@
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
+    "tags": [
+        "VSTeam", "PowerShell",
+        "API", "Pipeline",
+        "Methods and Practices"
+    ],
+
+    "links": {
+        "getstarted": {
+            "uri": "https://github.com/MethodsAndPractices/vsteam-azuredevops-ext"
+        },
+        "learn": {
+            "uri": "https://docs.microsoft.com/en-us/powershell"
+        },
+        "issues": {
+            "uri": "https://github.com/MethodsAndPractices/vsteam-azuredevops-ext/issues"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/MethodsAndPractices/vsteam-azuredevops-ext.git"
+    },
+    "branding": {
+        "color": "rgb(240,240,240)",
+        "theme": "light"
+    },
     "contributions": [
         {
             "id": "custom-task",
