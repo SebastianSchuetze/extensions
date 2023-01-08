@@ -19,7 +19,7 @@ async function run() {
         console.log('GeneratingScript');
         const contents: string[] = [];
 
-        if (isDebugEnabled) {
+        if (parameters.isDebugEnabled) {
             contents.push("$VerbosePreference = 'continue'");
         }
 
