@@ -14,18 +14,17 @@ async function run() {
         // Get parameters.
         const vsTeamParameters = new utils.VsTeamTaskParameters()
         const parameters = vsTeamParameters.getTaskParameters()
+        const generator = new utils.VsTeamScriptGenerator();
 
         // Generate the script contents.
         console.log('GeneratingScript');
-        const contents: string[] = [];
+        let contents: string[] = [];
 
         if (parameters.isDebugEnabled) {
             contents.push("$VerbosePreference = 'continue'");
         }
 
-        contents.push(`Install-Module VSTeam -Scope CurrentUser -Force`);
-        contents.push(`Set-VSTeamAccount -Account "${parameters.azureDevOpsCred.getHostUrl()}" -PersonalAccessToken "${parameters.azureDevOpsCred.getPatToken()}"`);
-        contents.push(`$ErrorActionPreference='` + parameters.errorActionPreference.toUpperCase() + `'`)
+        contents = contents.concat(generator.generatePrescript(parameters));
 
         // file script or inline
         if (parameters.scriptType.toUpperCase() === 'FILE') {

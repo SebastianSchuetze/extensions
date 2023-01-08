@@ -92,3 +92,17 @@ export class VsTeamTaskParameters {
     }
 
 }
+
+export class VsTeamScriptGenerator {
+
+    public generatePrescript(parameters: VsTeamTaskParameters): string[] {
+
+        let tmpPReScript: string[] = [];
+
+        tmpPReScript.push(`Install-Module VSTeam -Scope CurrentUser -Force`);
+        tmpPReScript.push(`Set-VSTeamAccount -Account "${parameters.azureDevOpsCred.getHostUrl()}" -PersonalAccessToken "${parameters.azureDevOpsCred.getPatToken()}"`);
+        tmpPReScript.push(`$ErrorActionPreference='` + parameters.errorActionPreference.toUpperCase() + `'`);
+
+        return tmpPReScript;
+    }
+}
