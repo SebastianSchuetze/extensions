@@ -7,9 +7,9 @@
     "tslint": "tslint --project tsconfig.json --config tslint.json",
     "tslint:fix": "tslint --project tsconfig.json --fix --config tslint.json",
     "test": "jest --verbose --coverage --coverageDirectory=coverage/",
-    "start": "node --no-deprecation dist/custom-task/main.js",
+    "start": "node --no-deprecation dist/vsteam-powershell/main.js",
     "clean:task": "tfx build tasks delete --task-id 27eb4bfc-a9e0-4984-b451-1133e3222a94 --token %ADO_PAT% --service-url %ADO_ACCOUNT_URI%",
-    "publish:task": "tfx build tasks upload --task-path dist/custom-task --overwrite --token %ADO_PAT% --service-url %ADO_ACCOUNT_URI%",
+    "publish:task": "tfx build tasks upload --task-path dist/vsteam-powershell --overwrite --token %ADO_PAT% --service-url %ADO_ACCOUNT_URI%",
     "clean:publish:task": "npm run clean:task && npm run publish:task",
     "package": "cd dist && tfx extension create --manifest-globs base.json %BUILD_ENV%.json --output-path %BUILD_ENV%.vsix --publisher %DEV_PUBLISHER% && cd ../",
     "publish": "tfx extension publish --vsix dist/%BUILD_ENV%.vsix --token %ADO_PAT%",
@@ -38,7 +38,7 @@
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"
   },
-  "name": "azure-pipelines-custom-task",
+  "name": "vsteam-azuredevops-extension",
   "private": true,
   "version": "0.0.0",
   "dependencies": {

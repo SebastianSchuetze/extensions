@@ -19,6 +19,10 @@ async function run() {
         console.log('GeneratingScript');
         const contents: string[] = [];
 
+        if (isDebugEnabled) {
+            contents.push("$VerbosePreference = 'continue'");
+        }
+
         contents.push(`Install-Module VSTeam -Scope CurrentUser -Force`);
         contents.push(`Set-VSTeamAccount -Account "${parameters.azureDevOpsCred.getHostUrl()}" -PersonalAccessToken "${parameters.azureDevOpsCred.getPatToken()}"`);
         contents.push(`$ErrorActionPreference='` + parameters.errorActionPreference.toUpperCase() + `'`)
@@ -40,15 +44,23 @@ async function run() {
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         const filePath = path.join(tempDirectory, uuidV4() + '.ps1');
 
-        fs.writeFile(
+        await fs.writeFile(
             filePath,
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-            () => { });           // Using empty call back since it's requested but not needed currently
+            {  encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
+                                   // encode the BOM into its UTF8 binary sequence.
+            function (err) {
+                if (err) throw err;
+                console.log('Saved!');
+        });
 
         // Run the script.
+        //
+        // Note, prefer "pwsh" over "powershell". At some point we can remove support for "powershell".
+        //
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
-        const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell'))
+        let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')
@@ -57,13 +69,14 @@ async function run() {
             .arg('-Command')
             .arg(`. '${filePath.replace(/'/g, "''")}'`);
 
-        const options = {
-            cwd: parameters.workingDirectory,
-            failOnStdErr: false,
-            errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
-            outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
-            ignoreReturnCode: true
-        } as tr.IExecOptions;
+        let options =
+            <tr.IExecOptions>{
+                cwd: parameters.workingDirectory,
+                failOnStdErr: false,
+                errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
+                outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
+                ignoreReturnCode: true
+            };
 
         // Listen for stderr.
         let stderrFailure = false;

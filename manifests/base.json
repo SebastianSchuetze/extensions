@@ -48,19 +48,19 @@
     },
     "contributions": [
         {
-            "id": "custom-task",
+            "id": "vsteam-powershell",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "custom-task"
+                "name": "vsteam-powershell"
             }
         }
     ],
     "files": [
         {
-            "path": "custom-task",
+            "path": "vsteam-powershell",
             "addressable": true
         }
     ]

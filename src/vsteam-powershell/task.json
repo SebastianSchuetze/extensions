@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
     "id": "{{taskid}}",
-    "name": "MyCustomTask{{tag}}",
+    "name": "VSteamPowerShell{{tag}}",
     "friendlyName": "VSTeam PowerShell",
     "description": "Azure DevOps pipeline extension to run VSTeam PowerShell scripts natively and cross-platform",
     "category": "Azure Pipelines",
@@ -54,7 +54,7 @@
             "label": "Inline VSTeam PowerShell",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Allows you to specify PowerShell containing VSTeam PowerShell cmdlets. <br/><br/>Check the [official documentation](documentation) for command that can be used.",
+            "helpMarkDown": "Allows you to specify PowerShell containing VSTeam PowerShell cmdlets. <br/><br/>Check the [official documentation](https://methodsandpractices.github.io/vsteam-docs/) for command that can be used.",
             "visibleRule": "FileOrInline = Inline",
             "properties": {
                 "resizable": "true",
@@ -121,7 +121,10 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
+            "target": "main.js"
+        },
+        "Node16": {
             "target": "main.js"
         }
     }

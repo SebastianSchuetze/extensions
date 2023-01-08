@@ -4,6 +4,7 @@ const ReplaceInFileWebpackPlugin = require("replace-in-file-webpack-plugin");
 const WebpackCommon = require("./webpack.common.config");
 
 const Target = WebpackCommon.GetTargetPath();
+const TaskName = "vsteam-powershell";
 
 const Settings = {
     "production": {
@@ -29,7 +30,7 @@ module.exports = env => {
     const config = {
 
         entry: {
-            "main": "./src/custom-task/main.ts",
+            "main": `./src/${TaskName}/main.ts`,
         },
 
         plugins: [
@@ -37,20 +38,20 @@ module.exports = env => {
                 // These files are needed by azure-pipelines-task-lib library.
                 {
                     from: path.resolve("./node_modules/azure-pipelines-task-lib/lib.json"),
-                    to: path.join(Target, "custom-task")
+                    to: path.join(Target, TaskName)
                 },
                 {
                     from: path.resolve("./node_modules/azure-pipelines-task-lib/Strings"),
-                    to: path.join(Target, "custom-task")
+                    to: path.join(Target, TaskName)
                 },
 
                 {
-                    from: path.join(__dirname, "./src/custom-task/task.json"),
-                    to: path.join(Target, "custom-task")
+                    from: path.join(__dirname, `./src/${TaskName}/task.json`),
+                    to: path.join(Target, TaskName)
                 },
                 {
                     from: path.join(__dirname, "./images/icon.png"),
-                    to: path.join(Target, "custom-task", "icon.png")
+                    to: path.join(Target, TaskName, "icon.png")
                 },
                 {
                     from: path.join(__dirname, "./manifests/base.json"),
@@ -71,11 +72,11 @@ module.exports = env => {
             ]),
 
             WebpackCommon.PackageJsonLoadFixer(Target, [
-                "custom-task/main.js",
+                `${TaskName}/main.js`,
             ]),
 
             WebpackCommon.VersionStringReplacer(Target, [
-                "custom-task/task.json",
+                `${TaskName}/task.json`,
                 "base.json"
             ]),
 
@@ -83,8 +84,8 @@ module.exports = env => {
                 {
                     dir: Target,
                     files: [
-                        "custom-task/main.js",
-                        "custom-task/task.json",
+                        `${TaskName}/main.js`,
+                        `${TaskName}/task.json`,
                         "base.json"
                     ],
                     rules: [
@@ -108,5 +109,5 @@ module.exports = env => {
         ],
     };
 
-    return WebpackCommon.FillDefaultNodeSettings(config, envName, "custom-task");
+    return WebpackCommon.FillDefaultNodeSettings(config, envName, TaskName);
 };

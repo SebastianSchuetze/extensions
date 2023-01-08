@@ -38,9 +38,10 @@ export class VsTeamTaskParameters {
     public workingDirectory!: string
     public errorActionPreference!: string
     public azureDevOpsCred!: AzureDevOpsCred
-
+    public isDebugEnabled!: boolean
 
     public getAzDPatToken(azDServiceConnection: string): AzureDevOpsCred {
+
         const endpointAuth = tl.getEndpointAuthorization(azDServiceConnection, true);
         if (endpointAuth !== undefined && endpointAuth.scheme === 'Token') {
             const hostUrl = tl.getEndpointUrl(azDServiceConnection, true);
@@ -81,6 +82,7 @@ export class VsTeamTaskParameters {
             const serviceName: string = tl.getInput('ConnectedServiceName', true)!;
             this.azureDevOpsCred = this.getAzDPatToken(serviceName)
             this.workingDirectory = tl.getPathInput('workingDirectory', true, true)!;
+            this.isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
 
             return this
 
