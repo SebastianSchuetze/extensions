@@ -93,13 +93,28 @@
             "helpMarkDown": "Prepends the line `$ErrorActionPreference='VALUE'` at the top of your script."
         },
         {
+            "name": "moduleSource",
+            "type": "pickList",
+            "label": "Module Source from",
+            "required": true,
+            "defaultValue": "psgallery",
+            "helpMarkDown": "Choose where the module should come from. Either the packed module with the task, dynamically downloaded from the PSGallery or the version that you may have installed on the agent",
+            "options": {
+                "packed": "Shipped with Task",
+                "psgallery": "Downloaded from PSGallery",
+                "agent": "Installed on Agent"
+            },
+            "groupName": "advanced"
+        },
+        {
             "name": "RequiredVersion",
             "type": "string",
             "label": "Required Version",
             "defaultValue": "latest",
             "required": true,
             "helpMarkDown": "Set the version that should be loaded. Use 'latest' to always load the newest version. Check github for the released versions: https://github.com/MethodsAndPractices/vsteam/releases",
-            "groupName": "advanced"
+            "groupName": "advanced",
+            "visibleRule": "moduleSource = psgallery"
         },
         {
             "name": "failOnStderr",

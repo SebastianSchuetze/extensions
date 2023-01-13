@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "npm run tslint:fix && webpack --config=webpack.config.js --env development",
+    "build": "npm run tslint:fix && webpack --config=webpack.config.js --env %BUILD_ENV% && npm run build:psmodule",
+    "build:psmodule": "pwsh -NoProfile \".azure-pipelines/scripts/Save-VSTeamModule.ps1\" -Version latest",
     "build:package": "npm run build && npm run package",
     "clean": "rimraf ./dist",
     "clean:build": "npm run clean && npm run build",

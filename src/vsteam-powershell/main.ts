@@ -48,7 +48,7 @@ async function run() {
             '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
             {  encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
                                    // encode the BOM into its UTF8 binary sequence.
-            function (err) {
+            (err) => {
                 if (err) throw err;
                 console.log('Saved!');
         });
@@ -59,7 +59,7 @@ async function run() {
         //
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
-        let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+        const powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')
@@ -68,14 +68,14 @@ async function run() {
             .arg('-Command')
             .arg(`. '${filePath.replace(/'/g, "''")}'`);
 
-        let options =
-            <tr.IExecOptions>{
+        const options =
+            {
                 cwd: parameters.workingDirectory,
                 failOnStdErr: false,
                 errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
                 outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
                 ignoreReturnCode: true
-            };
+            } as tr.IExecOptions;
 
         // Listen for stderr.
         let stderrFailure = false;

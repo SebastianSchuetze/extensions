@@ -39,6 +39,8 @@ export class VsTeamTaskParameters {
     public errorActionPreference!: string
     public azureDevOpsCred!: AzureDevOpsCred
     public isDebugEnabled!: boolean
+    public moduleSource!: string
+    public requiredVersion!: string
 
     public getAzDPatToken(azDServiceConnection: string): AzureDevOpsCred {
 
@@ -82,7 +84,10 @@ export class VsTeamTaskParameters {
             const serviceName: string = tl.getInput('ConnectedServiceName', true)!;
             this.azureDevOpsCred = this.getAzDPatToken(serviceName)
             this.workingDirectory = tl.getPathInput('workingDirectory', true, true)!;
-            this.isDebugEnabled = (process.env['SYSTEM_DEBUG'] || "").toLowerCase() === "true";
+            this.isDebugEnabled = (process.env.SYSTEM_DEBUG || "").toLowerCase() === "true";
+            this.moduleSource = tl.getInput('moduleSource', true)!;
+            this.requiredVersion = tl.getInput('requiredVersion', false)!;
+
 
             return this
 
@@ -97,9 +102,24 @@ export class VsTeamScriptGenerator {
 
     public generatePrescript(parameters: VsTeamTaskParameters): string[] {
 
-        let tmpPReScript: string[] = [];
+        const tmpPReScript: string[] = [];
 
-        tmpPReScript.push(`Install-Module VSTeam -Scope CurrentUser -Force`);
+        tmpPReScript.push(`tree ${__dirname} /F`);
+
+        switch (parameters.moduleSource.toUpperCase()) {
+            case 'PSGALLERY':
+                tmpPReScript.push(`Install-Module VSTeam -Scope -RequiredVersion ${parameters.requiredVersion} CurrentUser -Force`);
+                break;
+            case 'PACKED':
+                tmpPReScript.push(`Import-Module -Name ${__dirname}/modules/VSTeam/VSTeam.psd1`);
+                break;
+            case 'AGENT':
+                tmpPReScript.push(`Import-Module -Name VSTeam`);
+                break;
+            default:
+                throw new Error("Option does not exist: " + parameters.moduleSource);
+        }
+
         tmpPReScript.push(`Set-VSTeamAccount -Account "${parameters.azureDevOpsCred.getHostUrl()}" -PersonalAccessToken "${parameters.azureDevOpsCred.getPatToken()}"`);
         tmpPReScript.push(`$ErrorActionPreference='` + parameters.errorActionPreference.toUpperCase() + `'`);
 
